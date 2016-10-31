@@ -181,10 +181,12 @@ class Search:
         response = Search.elastic_request(self.elastic_url, self.url, data=json.dumps(self.query))
         logger.debug("curl '" + self.elastic_url + '/' + self.url + "&pretty' -d '" + json.dumps(self.query) + "'")
         if response.status_code != 200:
-            logger.warning("Error: elastic response 200:" + self.url)
-            json_err = json.dumps({"error": response.status_code,
+            logger.warning("Error: elastic response " + str(response.status_code) + " " + self.url)
+            json_err = {"error": response.status_code,
                                    "response": response.content.decode("utf-8"),
-                                   "url": self.url})
+                                   "url": self.url}
+            # I think that this should return an object as that is what it does if no failure
+            logger.debug(json_err)
             return json_err
         return response.json()
 
